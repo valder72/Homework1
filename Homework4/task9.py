@@ -77,7 +77,7 @@ for c, data_t in enumerate(ticket):
        if data_t == filtr and c != dub:
            ticket.pop(dub)
            dub_v.append(filtr[0])
-   if len(data_t) == 0:
+   if len(data_t):
        ticket.pop(c)
 v_t = 0
 av_age = []
