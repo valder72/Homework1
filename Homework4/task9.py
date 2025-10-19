@@ -77,7 +77,7 @@ for c, data_t in enumerate(ticket):
        if data_t == filtr and c != dub:
            ticket.pop(dub)
            dub_v.append(filtr[0])
-   if len(data_t):
+   if len(data_t) == 0:
        ticket.pop(c)
 v_t = 0
 av_age = []
@@ -101,14 +101,13 @@ for count in ticket:
            elif "C" in t_inf:
                zoneC_count += 1
 av_age = sum(av_age) / len(av_age)
-print("Tickets:", len(ticket))
+print("Valid tickets:", len(ticket))
 print("Minors:", minors)
 print(f"Average age: {av_age:.1f}")
 print(f"Zone counts: A={zoneA_count} B={zoneB_count} C={zoneC_count}")
 print(f"Duplicates: ", end='')
 for d in dub_v:
     print(d, end=' ')
-
 
 
 
