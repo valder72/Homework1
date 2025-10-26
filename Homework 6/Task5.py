@@ -51,7 +51,7 @@ def month_summary(month, year):
     if is_leap(year):
         print("(Leap Year: Yes)")
     else:
-        print(end="\n")
+        print()
 
 
 month = int(input("Enter month (1–12): "))
