@@ -1,0 +1,39 @@
+{
+  "size_price": {
+            "small": 1,
+            "medium": 1.5,
+            "large": 2
+          },
+  "price": {
+            "americano": 2.0,
+            "latte": 3.0,
+            "cappuccino": 3.5,
+            "cacao": 2.5
+           },
+  "menu": {
+          "americano": {
+                        "water_ml": 250,
+                        "milk_ml": 0,
+                        "coffee_g": 18,
+                        "cacao_g": 0
+                       },
+          "latte": {
+                    "water_ml": 200,
+                    "milk_ml": 150,
+                    "coffee_g": 24,
+                    "cacao_g": 0
+                   },
+          "cappuccino": {
+                          "water_ml": 250,
+                          "milk_ml": 100,
+                          "coffee_g": 24,
+                          "cacao_g": 0
+                        },
+          "cacao": {
+                    "water_ml": 100,
+                    "milk_ml": 200,
+                    "coffee_g": 0,
+                    "cacao_g": 20
+                   }
+        }
+}
