@@ -89,7 +89,6 @@ typhoon_departure_time_minute = f16_departure_time_minute + (time_f16_minute - t
 f16_used_fuel = (distance_kilometers / speed_kmph_f16) * fuel_lph_f16
 # typhoon
 typhoon_used_fuel = (distance_kilometers / speed_kmph_typhoon) * fuel_lph_typhoon
-
 # task 5
 a = "-"
 x = a * 106
