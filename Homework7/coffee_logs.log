@@ -1,0 +1,4 @@
+Welcome to COFFEE MACHINE!
+2025-11-03 00:00:06,586 - INFO - water_ml=1000, milk_ml=1000, coffee_g=100, cacao_g=100
+2025-11-03 00:00:06,587 - INFO - starting new process
+2025-11-03 00:00:06,587 - INFO - getting user choice
