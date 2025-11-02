@@ -243,7 +243,5 @@ if __name__ == "__main__":
     logging.basicConfig(filename='coffee_logs.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     with open('coffee_logs.log', 'w') as log:
         log.write("Welcome to COFFEE MACHINE!\n")
-    with open("money.log", "w", encoding="utf-8") as file:
-        file = file.write("")
     start()
 
