@@ -1,34 +1,4 @@
 Welcome to COFFEE MACHINE!
-2025-11-02 19:23:18,818 - INFO - water_ml=1000, milk_ml=1000, coffee_g=100, cacao_g=100
-2025-11-02 19:23:18,818 - INFO - Starting new process
-2025-11-02 19:23:18,818 - INFO - Getting user choice
-2025-11-02 19:23:22,516 - INFO - User chose americano
-2025-11-02 19:23:22,516 - INFO - Checking resources for coffee choice
-2025-11-02 19:23:22,516 - INFO - Enough resources
-2025-11-02 19:23:22,516 - INFO - Getting size
-2025-11-02 19:23:23,878 - INFO - User chose small cup
-2025-11-02 19:23:23,878 - INFO - Asking for an additional product
-2025-11-02 19:23:25,264 - INFO - User agreed for an additional drink
-2025-11-02 19:23:25,264 - INFO - Getting user choice
-2025-11-02 19:23:27,076 - INFO - User chose cacao
-2025-11-02 19:23:27,076 - INFO - Checking resources for coffee choice
-2025-11-02 19:23:27,076 - INFO - Getting size
-2025-11-02 19:23:28,602 - INFO - User chose small cup
-2025-11-02 19:23:28,603 - INFO - Calculating price
-2025-11-02 19:23:28,603 - INFO - Price was calculated $3.75
-2025-11-02 19:23:28,603 - INFO - Added cacao (1.5) for $3.75
-2025-11-02 19:23:38,942 - INFO - User declined an additional drink
-2025-11-02 19:23:38,942 - INFO - Calculating price
-2025-11-02 19:23:38,942 - INFO - Price was calculated $2.0
-2025-11-02 19:23:38,943 - INFO - Processing payment
-2025-11-02 19:23:38,943 - INFO - Total price $5.75
-2025-11-02 19:23:40,589 - INFO - Payment successful!
-2025-11-02 19:23:40,589 - INFO - Making drink
-2025-11-02 19:23:42,589 - INFO - Made americano, water_ml=750, milk_ml=1000, coffee_g=82, cacao_g=100
-2025-11-02 19:23:42,589 - INFO - Made drink successfully!
-2025-11-02 19:23:42,589 - INFO - Making drink
-2025-11-02 19:23:44,590 - INFO - Made cacao, water_ml=650, milk_ml=800, coffee_g=82, cacao_g=80
-2025-11-02 19:23:44,590 - INFO - Made drink successfully!
-2025-11-02 19:23:44,590 - INFO - Ending process
-2025-11-02 19:23:44,591 - INFO - Starting new process
-2025-11-02 19:23:44,591 - INFO - Getting user choice
+2025-11-03 13:20:04,281 - INFO - water_ml=1000, milk_ml=1000, coffee_g=100, cacao_g=100
+2025-11-03 13:20:04,281 - INFO - Starting new process
+2025-11-03 13:20:04,281 - INFO - Getting user choice

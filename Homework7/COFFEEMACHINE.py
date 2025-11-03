@@ -2,10 +2,9 @@ import logging
 import time
 import json
 
-
 def resources(log_to_check):
     list_resources = {}
-    for res in log_to_check:
+    for res in log_to_check.split(" "):
         res=res.split(" ")
         for item in res:
             if "water_ml" in item:
@@ -17,12 +16,26 @@ def resources(log_to_check):
             if "cacao_g" in item:
                 list_resources["cacao_g"] = int(item[8:])
     return list_resources
-def check_resources(resource, coffee_choice, menu):
+def check_resources(resource, coffee_choice_list, menu):
     logging.info("Checking resources for coffee choice")
-    return all([resource["water_ml"] >= menu[coffee_choice]["water_ml"],
-                resource["milk_ml"] >= menu[coffee_choice]["milk_ml"],
-                resource["coffee_g"] >= menu[coffee_choice]["coffee_g"],
-                resource["cacao_g"] >= menu[coffee_choice]["cacao_g"]])
+    wt = 0
+    milk = 0
+    coffee = 0
+    cacao = 0
+    for n in coffee_choice_list:
+        if all([resource["water_ml"] >= menu[n]["water_ml"] + wt,
+    resource["milk_ml"] >= menu[n]["milk_ml"] + milk,
+    resource["coffee_g"] >= menu[n]["coffee_g"] + coffee,
+    resource["cacao_g"] >= menu[n]["cacao_g"]+cacao]):
+            wt += menu[n]["milk_ml"]
+            milk += menu[n]["milk_ml"]
+            coffee += menu[n]["coffee_g"]
+            cacao += menu[n]["cacao_g"]
+            continue
+        else:
+            return False
+    return True
+
 def is_invalid_input(inputs):
     logging.info("Checking if input is invalid")
     if inputs == 1:
@@ -39,23 +52,6 @@ def is_invalid_input(inputs):
         return True
     logging.error("Invalid input")
     return False
-def check_admin():
-    logging.info("Checking if user is admin")
-    name = input("Please enter your name: ")
-    password = input("Please enter your password: ")
-    return name == "admin" and password == "123456"
-def refill_resources(resource):
-    logging.info("Refilling resources")
-    print("Refilling resources...")
-    resource["water_ml"] = 1000
-    resource["milk_ml"] = 1000
-    resource["coffee_g"] = 100
-    resource["cacao_g"] = 100
-    logging.info(f"water_ml={resource['water_ml']}, milk_ml={resource['milk_ml']}, "
-                 f"coffee_g={resource['coffee_g']}, cacao_g={resource['cacao_g']}")
-    print("Machine refilled successfully!")
-    logging.info("Resources refilled")
-    return resource
 def get_user_choice(menu):
     logging.info("Getting user choice")
     print("\nMenu:")
@@ -158,11 +154,11 @@ def make_coffee(resource, coffee_name, menu):
                  f"cacao_g={resource['cacao_g']}")
     print(f"{coffee_name.capitalize()} is ready!\n")
     logging.info("Made drink successfully!")
-def additional(resource, menu):
+def additional(resource, menu, first_choice):
     logging.info("Asking for an additional product")
     total_price = 0
     attempts = 0
-    choice_list = []
+    choice_list = [first_choice]
     while True:
         choices = input("Would you like another drink? (y/n): ").strip().lower()
         if choices in ("y", "yes"):
@@ -172,7 +168,8 @@ def additional(resource, menu):
                 choice_list.append(choice)
                 if not choice:
                     continue
-                if not check_resources(resource, choice, menu):
+                choice_list.append(choice)
+                if not check_resources(resource, choice_list, menu):
                     logging.error(f"Not enough resources for {choice}")
                     print("Not enough resources for that drink!")
                     attempts += 1
@@ -195,40 +192,39 @@ def additional(resource, menu):
     return [total_price, choice_list]
 def start():
     logging.info("water_ml=1000, milk_ml=1000, coffee_g=100, cacao_g=100")
-    with open('coffee_logs.log', 'r', encoding="utf-8") as log_file:
-        lines = log_file.read().split("\n")
-        lines = lines[-2].split(" ")
-        resource = resources(lines)
-        while True:
+    while True:
+            with open('coffee_logs.log', 'r', encoding="utf-8") as log_file:
+                lines = log_file.read().split("\n")[:-1]
+                for n in lines[::-1]:
+                    if "water_ml" in n:
+                        resource = resources(n)
+                        break
             with open('menu_price.json', 'r', encoding="utf-8") as log_f:
                 menu = json.load(log_f)["menu"]
             logging.info("Starting new process")
             print("\nHello! What would you like?")
-            choice = get_user_choice(menu)
-            if not choice:
+            first_choice = get_user_choice(menu)
+            if not first_choice:
                 continue
-            if not check_resources(resource, choice, menu):
+            first_choice_list = [first_choice]
+            if not check_resources(resource, first_choice_list, menu):
                 logging.error("Not enough resources")
                 print("Not enough resources for that coffee!")
-                if check_admin():
-                    logging.info("admin came")
-                    resource = refill_resources(resource)
-                else:
-                    print("Please wait for admin to refill.")
-                    logging.info("admin didn't come")
-                    continue
+                print("Please wait for admin to refill.")
+                continue
             logging.info("Enough resources")
             size = get_size()
             if not size:
                 continue
-            x = additional(resource, menu)
-            choices = [choice]
-            if x[0]:
-                price = calculate_price(choice, size) + x[0]
-                for i in x[1]:
-                    choices.append(i)
+            x = additional(resource, menu, first_choice)
+            choices = [first_choice]
+            if not isinstance(x, bool):
+                if x[0]:
+                    price = calculate_price(first_choice, size) + x[0]
+                    for i in x[1]:
+                        choices.append(i)
             else:
-                price = calculate_price(choice, size)
+                price = calculate_price(first_choice, size)
             if process_payment(price):
                 for n in choices:
                     make_coffee(resource, n, menu)
@@ -243,5 +239,6 @@ if __name__ == "__main__":
     logging.basicConfig(filename='coffee_logs.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     with open('coffee_logs.log', 'w') as log:
         log.write("Welcome to COFFEE MACHINE!\n")
+
     start()
 
