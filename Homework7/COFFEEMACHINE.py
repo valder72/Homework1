@@ -1,7 +1,7 @@
 import logging
 import time
 import json
-
+from money import check_file
 def resources(log_to_check):
     list_resources = {}
     for res in log_to_check.split(" "):
@@ -237,6 +237,18 @@ def start():
             logging.info("Ending process")
 if __name__ == "__main__":
     logging.basicConfig(filename='coffee_logs.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    while True:
+        if not check_file("coffee_logs.log"):
+            print("""An error has occurred. Please try again later, when our specialists will fix it""")
+            continue
+        elif not check_file("menu_price.json"):
+            print("""An error has occurred. Please try again later, when our specialists will fix it""")
+            continue
+        elif not check_file("money.log"):
+            print("""An error has occurred. Please try again later, when our specialists will fix it""")
+            continue
+        else:
+            break
     with open('coffee_logs.log', 'w') as log:
         log.write("Welcome to COFFEE MACHINE!\n")
 

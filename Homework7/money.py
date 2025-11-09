@@ -1,8 +1,33 @@
 import json
 import time
 import logging
+from json import JSONDecodeError
+def graphic():
+    check_file("per_day.json")
+    with open("per_day.json", "r", encoding="utf-8") as f:
+        graph = json.load(f)
+    for year in graph:
+        if year != "total":
+            for month in graph[year]:
+                if month != "total_for_year":
+                    for day in graph[year][month]:
+                        if day != "total_for_month":
+                            amount = graph[year][month][day]
+                            length = "|"*(int(amount/2))
+                            print(f"{day} - {length}")
+def check_file(file_name):
+    try:
+        with open(file_name,"r", encoding="utf-8") as f:
+            f.read()
+        return True
+    except (FileNotFoundError, UnicodeDecodeError, IOError, JSONDecodeError) as e:
+        logging.error(f"Could not access file '{file_name}': {e}")
+        return False
 def check_res():
-    with open("coffee_logs.log", "r") as res_file:
+    if not check_file("coffee_logs.log"):
+        print("File corrupted.")
+        return "error"
+    with open("coffee_logs.log", "r", encoding="utf-8") as res_file:
         res_file=res_file.read().split("\n")[:-1]
         for n in res_file[::-1]:
             if "Not enough resources" in n:
@@ -36,16 +61,25 @@ def get_info():
     while True:
         if not check_res():
             print("Not enough resources. Please fill them.")
+        if check_res() == "error":
+            continue
         print("""\nWhat would you like to do?
         1.Get info about total amount of money you earn.
         2.Get more detailed info about money you earn(year/month/day).
-        3.Refill resources""")
-        per_day()
+        3.Refill resources
+        4.View sales amount by day """)
+        if not per_day():
+            continue
+        else:
+            per_day()
         try:
-            choice = int(input("Enter your choice (1 or 2): ").strip())
+            choice = int(input("Enter your choice (1 or 4): ").strip())
             match choice:
                 case 1:
-                    with open("per_day.json", "r") as f:
+                    if not check_file("per_day.json"):
+                        print("File corrupted.")
+                        continue
+                    with open("per_day.json", "r", encoding="utf-8") as f:
                         data = json.load(f)
                         print(f"Total earnings: ${data["total"]}")
                     time.sleep(2)
@@ -54,6 +88,9 @@ def get_info():
                     print("Welcome back")
                     continue
                 case 2:
+                    if not check_file("per_day.json"):
+                        print("File corrupted.")
+                        continue
                     with open("per_day.json", "r") as f:
                         data = json.load(f)
                     years = [year for year in data if year != "total"]
@@ -121,6 +158,12 @@ def get_info():
                     time.sleep(1)
                     print("Welcome back")
                     continue
+                case 4:
+                    graphic()
+                    time.sleep(2)
+                    print("Going back to main menu...")
+                    time.sleep(1)
+                    print("Welcome back")
                 case _:
                     print("Invalid choice. Please enter 1 or 2.")
         except ValueError:
@@ -133,6 +176,9 @@ def per_day():
     total_per_all_days = 0.0
     total_per_all_months = 0.0
     total_per_all_years = 0.0
+    if not check_file("money.log"):
+        print("File corrupted.")
+        return False
     with open("money.log", "r", encoding="utf-8") as file_logs:
         lines = file_logs.read().split("\n")
         for n in lines[:-1]:
@@ -151,9 +197,12 @@ def per_day():
         for _ in money_per_year:
             total_per_all_years += money_per_month["total_for_year"]
         money_per_year["total"] = money_per_year.get("total", 0.0) + total_per_all_years
+        if not check_file("per_day.json"):
+            print("File corrupted.")
+            return False
         with open("per_day.json", "w", encoding="utf-8") as per_day_file:
             json.dump(money_per_year, per_day_file, indent=5)
-
+        return True
 if __name__ == "__main__":
     print("Welcome to COFFEE MACHINE INFO")
     get_info()
