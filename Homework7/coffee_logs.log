@@ -41,3 +41,7 @@ Welcome to COFFEE MACHINE!
 2025-11-09 12:25:19,457 - INFO - Getting user choice
 2025-11-09 12:39:17,849 - INFO - water_ml=1000, milk_ml=1000, coffee_g=100, cacao_g=100
 2025-11-09 12:39:17,850 - INFO - Resources refilled
+2025-11-10 13:25:01,867 - INFO - water_ml=1000, milk_ml=1000, coffee_g=100, cacao_g=100
+2025-11-10 13:25:01,868 - INFO - Resources refilled
+2025-11-10 13:26:03,343 - INFO - water_ml=1000, milk_ml=1000, coffee_g=100, cacao_g=100
+2025-11-10 13:26:03,343 - INFO - Resources refilled
