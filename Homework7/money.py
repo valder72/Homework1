@@ -2,7 +2,9 @@ import json
 import time
 import logging
 from json import JSONDecodeError
+import matplotlib.pyplot as plt
 def graphic():
+    dict_plot={}
     check_file("per_day.json")
     with open("per_day.json", "r", encoding="utf-8") as f:
         graph = json.load(f)
@@ -13,8 +15,13 @@ def graphic():
                     for day in graph[year][month]:
                         if day != "total_for_month":
                             amount = graph[year][month][day]
-                            length = "|"*(int(amount/2))
-                            print(f"{day} - {length}")
+                            dict_plot[day] = amount
+    plt.bar(list(dict_plot.keys()), list(dict_plot.values()))
+    plt.title("Money per day")
+    plt.ylabel("Money")
+    plt.xlabel("Day")
+    plt.show()
+
 def check_file(file_name):
     try:
         with open(file_name,"r", encoding="utf-8") as f:
