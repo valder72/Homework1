@@ -3,6 +3,9 @@ import time
 import logging
 from json import JSONDecodeError
 import matplotlib.pyplot as plt
+import sys
+import subprocess
+subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'matplotlib'])#не забути видалити
 def graphic():
     dict_plot={}
     check_file("per_day.json")
