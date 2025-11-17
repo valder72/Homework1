@@ -7,23 +7,80 @@ import sys
 import subprocess
 subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'matplotlib'])#не забути видалити
 def graphic():
-    dict_plot={}
+    dict_plot_y = {}
+    dict_plot_m = {}
+    dict_plot_d = {}
+    dict_plot_h = {}
     check_file("per_day.json")
     with open("per_day.json", "r", encoding="utf-8") as f:
         graph = json.load(f)
     for year in graph:
         if year != "total":
+            amount_for_year = graph[year]["total_for_year"]
+            dict_plot_y[year] = amount_for_year
             for month in graph[year]:
                 if month != "total_for_year":
+                    amount_for_month = graph[year][month]["total_for_month"]
+                    dict_plot_m[month] = amount_for_month
                     for day in graph[year][month]:
                         if day != "total_for_month":
-                            amount = graph[year][month][day]
-                            dict_plot[day] = amount
-    plt.bar(list(dict_plot.keys()), list(dict_plot.values()))
-    plt.title("Money per day")
-    plt.ylabel("Money")
-    plt.xlabel("Day")
-    plt.show()
+                            amount_for_day = graph[year][month][day]["total_for_day"]
+                            dict_plot_d[day] = amount_for_day
+                            for hour in graph[year][month][day]:
+                                if hour != "total_for_day":
+                                    amount_for_hour = graph[year][month][day][hour]
+                                    dict_plot_h[f"{day} - {hour}"] = amount_for_hour
+    e=0
+    while True:
+        try:
+            choice = int(input("""Would you like to see by:
+1.year
+2.month
+3.day
+4.time
+If you want to go back print '9999'.
+Choice: """).strip())
+            if choice == 9999:
+                return False
+            if not 1 <= choice <= 4:
+                print("Invalid choice.")
+                e += 1
+                if e == 5:
+                    return False
+            break
+        except (ValueError, IndexError):
+            print("Invalid choice.")
+            e+=1
+            if e == 5:
+                return False
+
+    match choice:
+        case 1:
+            plt.bar(list(dict_plot_y.keys()), list(dict_plot_y.values()))
+            plt.title("Money per year")
+            plt.ylabel("Money")
+            plt.xlabel("Year")
+            plt.show()
+        case 2:
+            plt.bar(list(dict_plot_m.keys()), list(dict_plot_m.values()))
+            plt.title("Money per month")
+            plt.ylabel("Money")
+            plt.xlabel("Month")
+            plt.show()
+        case 3:
+            plt.bar(list(dict_plot_d.keys()), list(dict_plot_d.values()))
+            plt.title("Money per day")
+            plt.ylabel("Money")
+            plt.xlabel("Day")
+            plt.show()
+        case 4:
+            plt.bar(list(dict_plot_h.keys()), list(dict_plot_h.values()))
+            plt.title("Money per time")
+            plt.ylabel("Money")
+            plt.xlabel("Time")
+            plt.xticks(rotation='vertical')
+            plt.tight_layout()
+            plt.show()
 
 def check_file(file_name):
     try:
@@ -74,10 +131,10 @@ def get_info():
         if check_res() == "error":
             continue
         print("""\nWhat would you like to do?
-        1.Get info about total amount of money you earn.
-        2.Get more detailed info about money you earn(year/month/day).
-        3.Refill resources
-        4.View sales amount by day """)
+1.Get info about total amount of money you earn.
+2.Get more detailed info about money you earn(year/month/day).
+3.Refill resources
+4.View sales amount by year/month/day/time """)
         if not per_day():
             continue
         else:
@@ -152,7 +209,7 @@ def get_info():
                         time.sleep(1)
                         print("Welcome back")
                         continue
-                    amount = data[year_selected][month_selected][day_selected]
+                    amount = data[year_selected][month_selected][day_selected]["total_for_day"]
                     print(f"Earnings on {day_selected}: ${amount}")
                     time.sleep(2)
                     print("Going back to main menu...")
@@ -169,11 +226,12 @@ def get_info():
                     print("Welcome back")
                     continue
                 case 4:
-                    graphic()
-                    time.sleep(2)
-                    print("Going back to main menu...")
-                    time.sleep(1)
-                    print("Welcome back")
+                    fls=graphic()
+                    if not fls:
+                        time.sleep(2)
+                        print("Going back to main menu...")
+                        time.sleep(1)
+                        print("Welcome back")
                 case _:
                     print("Invalid choice. Please enter 1 or 2.")
         except ValueError:
@@ -183,9 +241,12 @@ def per_day():
     money_per_day = {}
     money_per_month = {}
     money_per_year = {}
+    money_per_time={}
+    total_for_day=0.0
     total_per_all_days = 0.0
     total_per_all_months = 0.0
     total_per_all_years = 0.0
+    d = ""
     if not check_file("money.log"):
         print("File corrupted.")
         return False
@@ -194,12 +255,23 @@ def per_day():
         for n in lines[:-1]:
             line = n.split(" ")
             year, month, day = line[0].split("-")
-            money_per_day[line[0]] = money_per_day.get(line[0], 0) + float(line[-1].strip("$"))
+            hours_minutes_seconds = line[1].split(",")[0]
+            year_month_day = f"{year}-{month}-{day}"
+            if d != year_month_day:
+                d = f"{year_month_day}"
+                money_per_time = {}
+            money_per_time[hours_minutes_seconds] = money_per_time.get(hours_minutes_seconds, 0) + float(line[-1].strip("$"))
+            money_per_day[year_month_day] = money_per_time
             year_month = f"{year}-{month}"
             money_per_month[year_month] = money_per_day
             money_per_year[year] = money_per_month
-        for n in money_per_day:
-            total_per_all_days += money_per_day[n]
+
+        for date, t in money_per_day.items():
+            for m in t.values():
+                total_for_day += m
+            money_per_day[date]["total_for_day"] = total_for_day
+            total_per_all_days += money_per_day[date]["total_for_day"]
+            total_for_day = 0.0
         money_per_day["total_for_month"] = money_per_month.get("total_for_month", 0.0) + total_per_all_days
         for _ in money_per_month:
             total_per_all_months += money_per_day["total_for_month"]
@@ -214,5 +286,5 @@ def per_day():
             json.dump(money_per_year, per_day_file, indent=5)
         return True
 if __name__ == "__main__":
-    print("Welcome to COFFEE MACHINE INFO")
+    print("Welcome to COFFE MACHINE!")
     get_info()
