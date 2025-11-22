@@ -2,6 +2,7 @@ import logging
 import time
 import json
 from money import check_file
+import argparse
 def resources(log_to_check):
     list_resources = {}
     for res in log_to_check.split(" "):
@@ -55,13 +56,22 @@ def is_invalid_input(inputs):
 def get_user_choice(menu):
     logging.info("Getting user choice")
     print("\nMenu:")
+    i = 0
     for i, coffee in enumerate(menu.keys(), 1):
         print(f"{i}. {coffee.capitalize()}")
     invalid_attempts = 0
-    while invalid_attempts < 5:
+    print("Type '9999'to return to main menu")
+    while invalid_attempts < i:
         try:
-            choice = int(input("Choose your coffee (1-4): "))
-            if choice not in range(1, 5):
+            choice = int(input(f"Choose your coffee (1-{i}): "))
+            if choice == 9999:
+                logging.error("Returning to menu...")
+                time.sleep(2)
+                print("Going back to main menu...")
+                time.sleep(1)
+                print("Welcome back")
+                return None
+            if choice not in range(1, i+1):
                 print("Invalid choice! Please try again.")
                 logging.error("Invalid input")
                 invalid_attempts += 1
@@ -75,13 +85,13 @@ def get_user_choice(menu):
     print("Too many invalid attempts. Returning to menu...")
     logging.error("User input error. Returning to menu...")
     return None
-def get_size():
+def get_size(menu_price):
     logging.info("Getting size")
-    with open("menu_price.json", "r") as file_menu:
+    with open(menu_price, "r") as file_menu:
         sizes = json.loads(file_menu.read())["size_price"]
     invalid_attempts = 0
     while invalid_attempts < 5:
-        print("\nChoose size:\n1. Small\n2. Medium\n3. Large")
+        print("\nChoose size:\n1. Small\n2. Medium\n3. Large\nType to '9999' return to main menu")
         try:
             size = int(input("Enter size number: "))
             match size:
@@ -94,6 +104,13 @@ def get_size():
                 case 3:
                     logging.info("User chose small cup")
                     return sizes["large"]
+                case 9999:
+                    logging.error("Returning to menu...")
+                    time.sleep(2)
+                    print("Going back to main menu...")
+                    time.sleep(1)
+                    print("Welcome back")
+                    return None
                 case _:
                     logging.error("Invalid input")
                     print("Invalid size. Try again.")
@@ -105,9 +122,9 @@ def get_size():
     logging.error("User input error. Returning to menu...")
     print("Too many invalid attempts. Returning to main menu...\n")
     return None
-def calculate_price(choice, size):
+def calculate_price(choice, size, menu_price):
     logging.info("Calculating price")
-    with open("menu_price.json", "r") as file_menu:
+    with open(menu_price, "r") as file_menu:
         base_prices = json.loads(file_menu.read())["price"][choice]
     logging.info(f"Price was calculated ${base_prices * size}")
     return base_prices * size
@@ -122,7 +139,14 @@ def process_payment(total_amount):
     attempts = 0
     while attempts < 5:
         try:
-            payment = float(input("Insert payment amount: $"))
+            payment = float(input("Insert payment amount$\nType to '9999' return to main menu\nAmount: "))
+            if payment == 9999:
+                logging.error("Returning to menu...")
+                time.sleep(2)
+                print("Going back to main menu...")
+                time.sleep(1)
+                print("Welcome back")
+                return False
             if payment >= total_amount:
                 change = payment - total_amount
                 if change > 0:
@@ -154,11 +178,11 @@ def make_coffee(resource, coffee_name, menu):
                  f"cacao_g={resource['cacao_g']}")
     print(f"{coffee_name.capitalize()} is ready!\n")
     logging.info("Made drink successfully!")
-def additional(resource, menu, first_choice):
+def additional(resource, menu, menu_price_file):
     logging.info("Asking for an additional product")
     total_price = 0
     attempts = 0
-    choice_list = [first_choice]
+    choice_list = []
     while True:
         choices = input("Would you like another drink? (y/n): ").strip().lower()
         if choices in ("y", "yes"):
@@ -168,7 +192,8 @@ def additional(resource, menu, first_choice):
                 choice_list.append(choice)
                 if not choice:
                     continue
-                choice_list.append(choice)
+                if None in choice_list:
+                    choice_list.remove(None)
                 if not check_resources(resource, choice_list, menu):
                     logging.error(f"Not enough resources for {choice}")
                     print("Not enough resources for that drink!")
@@ -177,10 +202,10 @@ def additional(resource, menu, first_choice):
                         print("Too many failed attempts.")
                         return False
                     continue
-                size = get_size()
+                size = get_size(menu_price_file)
                 if not size:
                     continue
-                drink_price = calculate_price(choice, size)
+                drink_price = calculate_price(choice, size, menu_price_file)
                 total_price += drink_price
                 logging.info(f"Added {choice} ({size}) for ${drink_price:.2f}")
                 break
@@ -190,7 +215,7 @@ def additional(resource, menu, first_choice):
         else:
             print("Please answer 'y' or 'n'.")
     return [total_price, choice_list]
-def start():
+def start(menu_price_f):
     logging.info("water_ml=1000, milk_ml=1000, coffee_g=100, cacao_g=100")
     while True:
             with open('coffee_logs.log', 'r', encoding="utf-8") as log_file:
@@ -199,7 +224,7 @@ def start():
                     if "water_ml" in n:
                         resource = resources(n)
                         break
-            with open('menu_price.json', 'r', encoding="utf-8") as log_f:
+            with open(menu_price_f, 'r', encoding="utf-8") as log_f:
                 menu = json.load(log_f)["menu"]
             logging.info("Starting new process")
             print("\nHello! What would you like?")
@@ -207,24 +232,25 @@ def start():
             if not first_choice:
                 continue
             first_choice_list = [first_choice]
+            if None in first_choice_list:
+                first_choice_list.remove(None)
             if not check_resources(resource, first_choice_list, menu):
                 logging.error("Not enough resources")
                 print("Not enough resources for that coffee!")
                 print("Please wait for admin to refill.")
                 continue
             logging.info("Enough resources")
-            size = get_size()
+            size = get_size(menu_price_f)
             if not size:
                 continue
-            x = additional(resource, menu, first_choice)
+            x = additional(resource, menu, menu_price_f)
             choices = [first_choice]
-            if not isinstance(x, bool):
-                if x[0]:
-                    price = calculate_price(first_choice, size) + x[0]
+            if x[0] != 0:
+                    price = calculate_price(first_choice, size, menu_price_f) + x[0]
                     for i in x[1]:
                         choices.append(i)
             else:
-                price = calculate_price(first_choice, size)
+                price = calculate_price(first_choice, size, menu_price_f)
             if process_payment(price):
                 for n in choices:
                     make_coffee(resource, n, menu)
@@ -236,21 +262,25 @@ def start():
             print("Next customer please!\n")
             logging.info("Ending process")
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="COFFEEMACHINE")
+    parser.add_argument("--menu", required=True, help="Path to menu price JSON file" )
+    args = parser.parse_args()
     logging.basicConfig(filename='coffee_logs.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     while True:
         if not check_file("coffee_logs.log"):
             print("""An error has occurred. Please try again later, when our specialists will fix it""")
+            time.sleep(1)
             continue
-        elif not check_file("menu_price.json"):
+        elif not check_file(args.menu):
             print("""An error has occurred. Please try again later, when our specialists will fix it""")
+            time.sleep(1)
             continue
         elif not check_file("money.log"):
             print("""An error has occurred. Please try again later, when our specialists will fix it""")
+            time.sleep(1)
             continue
         else:
             break
     with open('coffee_logs.log', 'w') as log:
         log.write("Welcome to COFFEE MACHINE!\n")
-
-    start()
-
+    start(args.menu)

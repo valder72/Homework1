@@ -1,47 +1,66 @@
 Welcome to COFFEE MACHINE!
-2025-11-09 12:24:56,209 - INFO - water_ml=1000, milk_ml=1000, coffee_g=100, cacao_g=100
-2025-11-09 12:24:56,209 - INFO - Starting new process
-2025-11-09 12:24:56,209 - INFO - Getting user choice
-2025-11-09 12:24:59,444 - INFO - User chose americano
-2025-11-09 12:24:59,445 - INFO - Checking resources for coffee choice
-2025-11-09 12:24:59,445 - INFO - Enough resources
-2025-11-09 12:24:59,445 - INFO - Getting size
-2025-11-09 12:25:00,915 - INFO - User chose small cup
-2025-11-09 12:25:00,915 - INFO - Asking for an additional product
-2025-11-09 12:25:03,395 - INFO - User agreed for an additional drink
-2025-11-09 12:25:03,395 - INFO - Getting user choice
-2025-11-09 12:25:04,036 - INFO - User chose americano
-2025-11-09 12:25:04,036 - INFO - Checking resources for coffee choice
-2025-11-09 12:25:04,036 - INFO - Getting size
-2025-11-09 12:25:04,806 - INFO - User chose small cup
-2025-11-09 12:25:04,806 - INFO - Calculating price
-2025-11-09 12:25:04,806 - INFO - Price was calculated $3.0
-2025-11-09 12:25:04,807 - INFO - Added americano (1.5) for $3.00
-2025-11-09 12:25:08,278 - INFO - User declined an additional drink
-2025-11-09 12:25:08,278 - INFO - Calculating price
-2025-11-09 12:25:08,278 - INFO - Price was calculated $3.0
-2025-11-09 12:25:08,278 - INFO - Processing payment
-2025-11-09 12:25:08,278 - INFO - Total price $6.00
-2025-11-09 12:25:10,520 - ERROR - Invalid input.
-2025-11-09 12:25:11,453 - INFO - Payment successful!
-2025-11-09 12:25:11,454 - INFO - Making drink
-2025-11-09 12:25:13,455 - INFO - Made americano, water_ml=750, milk_ml=1000, coffee_g=82, cacao_g=100
-2025-11-09 12:25:13,455 - INFO - Made drink successfully!
-2025-11-09 12:25:13,455 - INFO - Making drink
-2025-11-09 12:25:15,455 - INFO - Made americano, water_ml=500, milk_ml=1000, coffee_g=64, cacao_g=100
-2025-11-09 12:25:15,456 - INFO - Made drink successfully!
-2025-11-09 12:25:15,456 - INFO - Making drink
-2025-11-09 12:25:17,456 - INFO - Made americano, water_ml=250, milk_ml=1000, coffee_g=46, cacao_g=100
-2025-11-09 12:25:17,456 - INFO - Made drink successfully!
-2025-11-09 12:25:17,456 - INFO - Making drink
-2025-11-09 12:25:19,457 - INFO - Made americano, water_ml=0, milk_ml=1000, coffee_g=28, cacao_g=100
-2025-11-09 12:25:19,457 - INFO - Made drink successfully!
-2025-11-09 12:25:19,457 - INFO - Ending process
-2025-11-09 12:25:19,457 - INFO - Starting new process
-2025-11-09 12:25:19,457 - INFO - Getting user choice
-2025-11-09 12:39:17,849 - INFO - water_ml=1000, milk_ml=1000, coffee_g=100, cacao_g=100
-2025-11-09 12:39:17,850 - INFO - Resources refilled
-2025-11-10 13:25:01,867 - INFO - water_ml=1000, milk_ml=1000, coffee_g=100, cacao_g=100
-2025-11-10 13:25:01,868 - INFO - Resources refilled
-2025-11-10 13:26:03,343 - INFO - water_ml=1000, milk_ml=1000, coffee_g=100, cacao_g=100
-2025-11-10 13:26:03,343 - INFO - Resources refilled
+2025-11-17 14:36:30,332 - INFO - water_ml=1000, milk_ml=1000, coffee_g=100, cacao_g=100
+2025-11-17 14:36:30,332 - INFO - Starting new process
+2025-11-17 14:36:30,332 - INFO - Getting user choice
+2025-11-17 14:36:31,429 - INFO - User chose americano
+2025-11-17 14:36:31,429 - INFO - Checking resources for coffee choice
+2025-11-17 14:36:31,430 - INFO - Enough resources
+2025-11-17 14:36:31,430 - INFO - Getting size
+2025-11-17 14:36:31,975 - INFO - User chose small cup
+2025-11-17 14:36:31,975 - INFO - Asking for an additional product
+2025-11-17 14:36:33,362 - INFO - User agreed for an additional drink
+2025-11-17 14:36:33,363 - INFO - Getting user choice
+2025-11-17 14:36:35,092 - ERROR - Returning to menu...
+2025-11-17 14:36:38,093 - INFO - Getting user choice
+2025-11-17 14:36:38,903 - INFO - User chose americano
+2025-11-17 14:36:38,903 - INFO - Checking resources for coffee choice
+2025-11-17 14:36:38,921 - INFO - Getting size
+2025-11-17 14:36:40,745 - INFO - User chose small cup
+2025-11-17 14:36:40,745 - INFO - Calculating price
+2025-11-17 14:36:40,746 - INFO - Price was calculated $3.0
+2025-11-17 14:36:40,746 - INFO - Added americano (1.5) for $3.00
+2025-11-17 14:36:41,741 - INFO - User declined an additional drink
+2025-11-17 14:36:41,741 - INFO - Calculating price
+2025-11-17 14:36:41,742 - INFO - Price was calculated $3.0
+2025-11-17 14:36:41,742 - INFO - Processing payment
+2025-11-17 14:36:41,742 - INFO - Total price $6.00
+2025-11-17 14:36:43,356 - INFO - Payment successful!
+2025-11-17 14:36:43,356 - INFO - Making drink
+2025-11-17 14:36:45,357 - INFO - Made americano, water_ml=750, milk_ml=1000, coffee_g=82, cacao_g=100
+2025-11-17 14:36:45,357 - INFO - Made drink successfully!
+2025-11-17 14:36:45,357 - INFO - Making drink
+2025-11-17 14:36:47,357 - INFO - Made americano, water_ml=500, milk_ml=1000, coffee_g=64, cacao_g=100
+2025-11-17 14:36:47,357 - INFO - Made drink successfully!
+2025-11-17 14:36:47,358 - INFO - Ending process
+2025-11-17 14:36:47,358 - INFO - Starting new process
+2025-11-17 14:36:47,358 - INFO - Getting user choice
+2025-11-17 14:36:51,407 - INFO - User chose cacao
+2025-11-17 14:36:51,407 - INFO - Checking resources for coffee choice
+2025-11-17 14:36:51,407 - INFO - Enough resources
+2025-11-17 14:36:51,407 - INFO - Getting size
+2025-11-17 14:36:52,526 - INFO - User chose small cup
+2025-11-17 14:36:52,526 - INFO - Asking for an additional product
+2025-11-17 14:36:53,738 - INFO - User agreed for an additional drink
+2025-11-17 14:36:53,738 - INFO - Getting user choice
+2025-11-17 14:36:54,339 - INFO - User chose americano
+2025-11-17 14:36:54,339 - INFO - Checking resources for coffee choice
+2025-11-17 14:36:54,339 - INFO - Getting size
+2025-11-17 14:36:54,817 - INFO - User chose small cup
+2025-11-17 14:36:54,817 - INFO - Calculating price
+2025-11-17 14:36:54,818 - INFO - Price was calculated $3.0
+2025-11-17 14:36:54,818 - INFO - Added americano (1.5) for $3.00
+2025-11-17 14:36:57,611 - INFO - User declined an additional drink
+2025-11-17 14:36:57,611 - INFO - Calculating price
+2025-11-17 14:36:57,611 - INFO - Price was calculated $3.75
+2025-11-17 14:36:57,611 - INFO - Processing payment
+2025-11-17 14:36:57,611 - INFO - Total price $6.75
+2025-11-17 14:37:00,292 - INFO - Payment successful!
+2025-11-17 14:37:00,293 - INFO - Making drink
+2025-11-17 14:37:02,293 - INFO - Made cacao, water_ml=400, milk_ml=800, coffee_g=64, cacao_g=80
+2025-11-17 14:37:02,293 - INFO - Made drink successfully!
+2025-11-17 14:37:02,293 - INFO - Making drink
+2025-11-17 14:37:04,294 - INFO - Made americano, water_ml=150, milk_ml=800, coffee_g=46, cacao_g=80
+2025-11-17 14:37:04,294 - INFO - Made drink successfully!
+2025-11-17 14:37:04,294 - INFO - Ending process
+2025-11-17 14:37:04,294 - INFO - Starting new process
+2025-11-17 14:37:04,294 - INFO - Getting user choice
