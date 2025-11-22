@@ -3,6 +3,222 @@ import time
 import logging
 from json import JSONDecodeError
 import matplotlib.pyplot as plt
+def save_to_another_file(data):
+    error = 0
+    while True:
+        if error == 5:
+            return False
+        try:
+            cho = int(input("Would you to save changes in 1.current file(menu_price.json) or 2.another?(print number): "))
+            match cho:
+                case 1:
+                    with open('menu_price.json', 'w', encoding="utf-8") as f:
+                        f.write(json.dumps(data, indent=4))
+                        return "menu_price.json"
+
+                case 2:
+                    name = input("Type name of file(max length 64): ").lower().replace(" ", "_")
+                    name +=".json"
+                    if name == "menu_price.json":
+                        print("filename already exists.")
+                        error += 1
+                        continue
+                    if len(name) > 64:
+                        error += 1
+                        continue
+                    with open(name, 'w') as f:
+                        f.write(json.dumps(data, indent=4))
+                    return name
+        except ValueError:
+            print("Invalid input")
+            error += 1
+            if error == 5:
+                print("Too many wrong attempts")
+                return False
+def manage_coffee():
+    with open("menu_price.json", "r", encoding="utf-8") as data:
+        data = json.load(data)
+    error = 0
+    while True:
+        if error == 5:
+            return False
+        try:
+            action = int(input("What would you like to do?(print number)\n1.Add\n2.Delete\n3.Change\n4.Change size price\nIf you want to go back print '9999'.\nInput:"))
+            match action:
+                case 9999:
+                    print("Goodbye!")
+                    return False
+                case 1:
+                    name = input("Name: ").lower().strip()
+                    for j in data['price'].keys():
+                        if name in j:
+                            print("Coffee already exists.")
+                    error = 0
+                    while True:
+                        if error == 5:
+                            return False
+                        try:
+                            price = float(input("Price: "))
+                            w = int(input("Water ml (<300): "))
+                            if not (w <= 300):
+                                print("Water must be under 300 ml!")
+                                error+=1
+                                continue
+                            m = int(input("Milk ml (<300): "))
+                            if m >= 300:
+                                print("Milk must be under 300 ml!")
+                                error += 1
+                                continue
+                            cof = int(input("Coffee g (<40): "))
+                            if cof >= 40:
+                                print("Coffee must be under 40 g!")
+                                error += 1
+                                continue
+                            ca = int(input("Cacao g (<40): "))
+                            if ca >= 40:
+                                print("Cacao must be under 40 g!")
+                                error += 1
+                                continue
+                            data['price'][name] = price
+                            data['menu'][name] = {"water_ml": w, "milk_ml": m, "coffee_g": cof, "cacao_g": ca}
+                            print(f"Added {name} with price {price}$ and resources {data['price'][name]}.")
+                            return data
+                        except ValueError:
+                            print("Invalid input.")
+                            error += 1
+                            if error == 5:
+                                return False
+                case 2:
+                    print("Menu: ")
+                    i_list=[]
+                    for i, coffee in enumerate(data["price"].keys(), 1):
+                        print(f"{i}. {coffee.capitalize()}")
+                        i_list.append((i, coffee))
+                    error=0
+                    try:
+                        name = int(input("Which coffee to delete?(number): "))
+                        for m in i_list:
+                            if name == m[0]:
+                                del data['price'][m[1]]
+                                del data['menu'][m[1]]
+                                print(f"Deleted {m[1]}.")
+                        print("Coffee not found.")
+                        return data
+                    except ValueError:
+                        print("Invalid input.")
+                        error += 1
+                        if error == 5:
+                            return False
+                case 3:
+                    print("Menu: ")
+                    i_list = []
+                    for i, coffee in enumerate(data["price"].keys(), 1):
+                        print(f"{i}. {coffee.capitalize()}")
+                        i_list.append((i, coffee))
+                    error=0
+                    try:
+                        inp = int(input("Name to change(number): "))
+                        name = i_list[inp-1][1]
+                        if name in data['price']:
+                            sub_action = int(input("What do you want to update?\n1.Price\n2.Resources\nInput: "))
+                            error = 0
+                            try:
+                                match sub_action:
+                                    case 1:
+                                        error = 0
+                                        try:
+                                            new_p_size = float(input(f"New price (current {data['price'][name]}): "))
+                                            data['price'][name] = new_p_size
+                                            return data
+                                        except ValueError:
+                                            print("Invalid input.")
+                                            error += 1
+                                            if error == 5:
+                                                return False
+                                    case 2:
+                                        print("Enter new value or press Enter to keep current.")
+                                        error = 0
+                                        while True:
+                                            if error == 5:
+                                                return False
+                                            try:
+                                                w = int(input(f"Water ml (<300)(current {data['menu'][name]["water_ml"]}): "))
+                                                if not (w <= 300):
+                                                    print("Water must be under 300 ml!")
+                                                    error+=1
+                                                    continue
+                                                m = int(input(f"Milk ml (<300)(current {data['menu'][name]["milk_ml"]}): "))
+                                                if m >= 300:
+                                                    print("Milk must be under 300 ml!")
+                                                    error += 1
+                                                    continue
+                                                cof = int(input(f"Coffee g (<40)(current {data['menu'][name]["coffee_g"]}): "))
+                                                if cof >= 40:
+                                                    print("Coffee must be under 40 g!")
+                                                    error += 1
+                                                    continue
+                                                ca = int(input(f"Cacao g (<40)(current {data['menu'][name]["cacao_g"]}): "))
+                                                if ca >= 40:
+                                                    print("Cacao must be under 40 g!")
+                                                    error += 1
+                                                    continue
+                                                data['menu'][name]["water_ml"] = w
+                                                data['menu'][name]["milk_ml"] = m
+                                                data['menu'][name]["coffee_g"] = cof
+                                                data['menu'][name]["cacao_g"] = ca
+                                                return data
+                                            except ValueError:
+                                                print("Invalid input.")
+                                                error += 1
+                                                if error == 5:
+                                                    return False
+                            except ValueError:
+                                print("Invalid input.")
+                                error += 1
+                                if error == 5:
+                                    return False
+                        else:
+                            print("Coffee not found.")
+                    except (ValueError, IndexError):
+                        print("Invalid input.")
+                        error += 1
+                        if error == 5:
+                            return False
+                case 4:
+                    error = 0
+                    while True:
+                        if error == 5:
+                            return False
+                        try:
+                            s_name = int(input("Which size (1.small, 2.medium, 3.large)(enter number)?: "))
+                            if s_name in range(1, 4):
+                                error = 0
+                                try:
+                                    new_p_size = float(input(f"New price for {s_name} (current {data['size_price'][s_name]}): "))
+                                    data['size_price'][s_name] = new_p_size
+                                    print("Size updated.")
+                                    return data
+                                except ValueError:
+                                    print("Invalid number.")
+                                    error += 1
+                                    if error == 5:
+                                        return False
+                            else:
+                                print("Size not found.Please try again.")
+                                error += 1
+                                continue
+                        except ValueError:
+                            print("Invalid input.")
+                            error += 1
+                            if error == 5:
+                                return False
+                case _:
+                    print("Unknown command.")
+        except ValueError:
+            print("Invalid input.")
+            error += 1
+            if error == 5:
+                return False
 def graphic():
     dict_plot_y = {}
     dict_plot_m = {}
@@ -50,7 +266,6 @@ Choice: """).strip())
             e+=1
             if e == 5:
                 return False
-
     match choice:
         case 1:
             plt.bar(list(dict_plot_y.keys()), list(dict_plot_y.values()))
@@ -131,13 +346,14 @@ def get_info():
 1.Get info about total amount of money you earn.
 2.Get more detailed info about money you earn(year/month/day).
 3.Refill resources
-4.View sales amount by year/month/day/time """)
+4.View sales amount by year/month/day/time
+5.Work with menu""")
         if not per_day():
             continue
         else:
             per_day()
         try:
-            choice = int(input("Enter your choice (1 or 4): ").strip())
+            choice = int(input("Enter your choice (1 or 5): ").strip())
             match choice:
                 case 1:
                     if not check_file("per_day.json"):
@@ -229,6 +445,41 @@ def get_info():
                         print("Going back to main menu...")
                         time.sleep(1)
                         print("Welcome back")
+                case 5:
+                    if not check_file("menu_price.json"):
+                        time.sleep(1)
+                        print("Going back to main menu...")
+                        time.sleep(1)
+                        print("Welcome back")
+                        continue
+                    p = manage_coffee()
+                    if not p:
+                        time.sleep(1)
+                        print("Going back to main menu...")
+                        time.sleep(1)
+                        print("Welcome back")
+                        continue
+                    v = save_to_another_file(p)
+                    if not v:
+                        time.sleep(1)
+                        print("Going back to main menu...")
+                        time.sleep(1)
+                        print("Welcome back")
+                        continue
+                    elif v == "menu_price.json":
+                        print("File 'menu_price.json' was changed")
+                        time.sleep(1)
+                        print("Going back to main menu...")
+                        time.sleep(1)
+                        print("Welcome back")
+                        continue
+                    else:
+                        print(f"File {v} was changed")
+                        time.sleep(1)
+                        print("Going back to main menu...")
+                        time.sleep(1)
+                        print("Welcome back")
+                        continue
                 case _:
                     print("Invalid choice. Please enter 1 or 2.")
         except ValueError:
