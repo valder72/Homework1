@@ -17,13 +17,14 @@ def save_to_another_file(data):
                         return "menu_price.json"
 
                 case 2:
-                    name = input("Type name of file(max length 64): ").lower().replace(" ", "_")
+                    name = input("Type name of file(max length 32 and word 'menu' in it): ").lower().replace(" ", "_")
                     name +=".json"
                     if name == "menu_price.json":
                         print("filename already exists.")
                         error += 1
                         continue
-                    if len(name) > 64:
+                    if len(name) > 32 or "menu" not in name.lower().split("_"):
+                        print("Too long or doesn't have 'menu' in it.")
                         error += 1
                         continue
                     with open(name, 'w') as f:
@@ -102,7 +103,8 @@ def manage_coffee():
                                 del data['price'][m[1]]
                                 del data['menu'][m[1]]
                                 print(f"Deleted {m[1]}.")
-                        print("Coffee not found.")
+                            else:
+                                print("Coffee not found.")
                         return data
                     except ValueError:
                         print("Invalid input.")
